@@ -98,7 +98,7 @@ resource "netbox_mac_address" "this" {
 ### Optional
 
 - `comments` (String)
-- `custom_fields` (Map of String)
+- `custom_fields` (Map of String) Custom fields. Values are automatically converted to the appropriate type (int, bool, float, JSON object) based on the value format. For complex objects, use JSON strings.
 - `description` (String)
 - `device_interface_id` (Number) Conflicts with `interface_id` and `virtual_machine_interface_id`.
 - `interface_id` (Number) Required when `object_type` is set.

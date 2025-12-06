@@ -45,7 +45,7 @@ resource "netbox_device_power_port" "test" {
 ### Optional
 
 - `allocated_draw` (Number)
-- `custom_fields` (Map of String)
+- `custom_fields` (Map of String) Custom fields. Values are automatically converted to the appropriate type (int, bool, float, JSON object) based on the value format. For complex objects, use JSON strings.
 - `description` (String)
 - `label` (String)
 - `mark_connected` (Boolean) Defaults to `false`.

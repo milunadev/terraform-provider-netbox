@@ -42,7 +42,7 @@ resource "netbox_service" "ssh" {
 
 ### Optional
 
-- `custom_fields` (Map of String)
+- `custom_fields` (Map of String) Custom fields. Values are automatically converted to the appropriate type (int, bool, float, JSON object) based on the value format. For complex objects, use JSON strings.
 - `description` (String)
 - `device_id` (Number) Exactly one of `virtual_machine_id` or `device_id` must be given.
 - `port` (Number, Deprecated) Exactly one of `port` or `ports` must be given.

@@ -62,7 +62,7 @@ resource "netbox_device" "test" {
 - `cluster_id` (Number)
 - `comments` (String)
 - `config_template_id` (Number)
-- `custom_fields` (Map of String)
+- `custom_fields` (Map of String) Custom fields. Values are automatically converted to the appropriate type (int, bool, float, JSON object) based on the value format. For complex objects, use JSON strings.
 - `description` (String)
 - `local_context_data` (String) This is best managed through the use of `jsonencode` and a map of settings.
 - `location_id` (Number)

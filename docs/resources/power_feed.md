@@ -63,7 +63,7 @@ resource "netbox_power_feed" "test" {
 ### Optional
 
 - `comments` (String)
-- `custom_fields` (Map of String)
+- `custom_fields` (Map of String) Custom fields. Values are automatically converted to the appropriate type (int, bool, float, JSON object) based on the value format. For complex objects, use JSON strings.
 - `description` (String)
 - `mark_connected` (Boolean) Defaults to `false`.
 - `rack_id` (Number)

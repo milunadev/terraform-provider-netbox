@@ -45,7 +45,7 @@ resource "netbox_location" "test" {
 
 ### Optional
 
-- `custom_fields` (Map of String)
+- `custom_fields` (Map of String) Custom fields. Values are automatically converted to the appropriate type (int, bool, float, JSON object) based on the value format. For complex objects, use JSON strings.
 - `description` (String)
 - `facility` (String)
 - `parent_id` (Number)

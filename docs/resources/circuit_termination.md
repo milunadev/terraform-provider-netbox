@@ -58,7 +58,7 @@ resource "netbox_circuit_termination" "test" {
 
 ### Optional
 
-- `custom_fields` (Map of String)
+- `custom_fields` (Map of String) Custom fields. Values are automatically converted to the appropriate type (int, bool, float, JSON object) based on the value format. For complex objects, use JSON strings.
 - `description` (String)
 - `location_id` (Number) Exactly one of `site_id`, `site_group_id`, `region_id` or `provider_network_id` must be given.
 - `port_speed` (Number)

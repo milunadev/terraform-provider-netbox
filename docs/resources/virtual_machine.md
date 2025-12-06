@@ -73,7 +73,7 @@ resource "netbox_virtual_machine" "full_vm" {
 
 - `cluster_id` (Number) At least one of `site_id` or `cluster_id` must be given.
 - `comments` (String)
-- `custom_fields` (Map of String)
+- `custom_fields` (Map of String) Custom fields. Values are automatically converted to the appropriate type (int, bool, float, JSON object) based on the value format. For complex objects, use JSON strings.
 - `description` (String)
 - `device_id` (Number)
 - `disk_size_mb` (Number)

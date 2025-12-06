@@ -37,7 +37,7 @@ resource "netbox_module_type" "test" {
 ### Optional
 
 - `comments` (String)
-- `custom_fields` (Map of String)
+- `custom_fields` (Map of String) Custom fields. Values are automatically converted to the appropriate type (int, bool, float, JSON object) based on the value format. For complex objects, use JSON strings.
 - `description` (String)
 - `part_number` (String)
 - `tags` (Set of String)

@@ -49,7 +49,7 @@ resource "netbox_rack" "test" {
 
 - `asset_tag` (String)
 - `comments` (String)
-- `custom_fields` (Map of String)
+- `custom_fields` (Map of String) Custom fields. Values are automatically converted to the appropriate type (int, bool, float, JSON object) based on the value format. For complex objects, use JSON strings.
 - `desc_units` (Boolean) If rack units are descending. Defaults to `false`.
 - `description` (String)
 - `facility_id` (String)

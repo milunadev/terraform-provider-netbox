@@ -62,7 +62,7 @@ resource "netbox_inventory_item" "test" {
 - `asset_tag` (String)
 - `component_id` (Number) Required when `component_type` is set.
 - `component_type` (String)
-- `custom_fields` (Map of String)
+- `custom_fields` (Map of String) Custom fields. Values are automatically converted to the appropriate type (int, bool, float, JSON object) based on the value format. For complex objects, use JSON strings.
 - `description` (String)
 - `discovered` (Boolean) Defaults to `false`.
 - `label` (String)

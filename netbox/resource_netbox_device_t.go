@@ -12,15 +12,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-var resourceNetboxDeviceStatusOptions = []string{"offline", "active", "planned", "staged", "failed", "inventory", "decommissioning"}
-var resourceNetboxDeviceRackFaceOptions = []string{"front", "rear"}
+var resourceNetboxDeviceTStatusOptions = []string{"offline", "active", "planned", "staged", "failed", "inventory", "decommissioning"}
+var resourceNetboxDeviceTRackFaceOptions = []string{"front", "rear"}
 
-func resourceNetboxDevice() *schema.Resource {
+func resourceNetboxDeviceT() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceNetboxDeviceCreate,
-		ReadContext:   resourceNetboxDeviceRead,
-		UpdateContext: resourceNetboxDeviceUpdate,
-		DeleteContext: resourceNetboxDeviceDelete,
+		CreateContext: resourceNetboxDeviceTCreate,
+		ReadContext:   resourceNetboxDeviceTRead,
+		UpdateContext: resourceNetboxDeviceTUpdate,
+		DeleteContext: resourceNetboxDeviceTDelete,
 
 		Description: `:meta:subcategory:Data Center Inventory Management (DCIM):From the [official documentation](https://docs.netbox.dev/en/stable/features/devices/#devices):
 
@@ -91,8 +91,8 @@ func resourceNetboxDevice() *schema.Resource {
 			"status": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validation.StringInSlice(resourceNetboxDeviceStatusOptions, false),
-				Description:  buildValidValueDescription(resourceNetboxDeviceStatusOptions),
+				ValidateFunc: validation.StringInSlice(resourceNetboxDeviceTStatusOptions, false),
+				Description:  buildValidValueDescription(resourceNetboxDeviceTStatusOptions),
 				Default:      "active",
 			},
 			"rack_id": {
@@ -103,8 +103,8 @@ func resourceNetboxDevice() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				RequiredWith: []string{"rack_position"},
-				ValidateFunc: validation.StringInSlice(resourceNetboxDeviceRackFaceOptions, false),
-				Description:  buildValidValueDescription(resourceNetboxDeviceRackFaceOptions),
+				ValidateFunc: validation.StringInSlice(resourceNetboxDeviceTRackFaceOptions, false),
+				Description:  buildValidValueDescription(resourceNetboxDeviceTRackFaceOptions),
 			},
 			"rack_position": {
 				Type:     schema.TypeFloat,
@@ -133,7 +133,7 @@ func resourceNetboxDevice() *schema.Resource {
 				Optional:    true,
 				Description: "This is best managed through the use of `jsonencode` and a map of settings.",
 			},
-			customFieldsKey: customFieldsSchema,
+			customFieldsKeyT: customFieldsSchemaT,
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -141,7 +141,7 @@ func resourceNetboxDevice() *schema.Resource {
 	}
 }
 
-func resourceNetboxDeviceCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceNetboxDeviceTCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	api := m.(*providerState)
 
 	name := d.Get("name").(string)
@@ -234,9 +234,9 @@ func resourceNetboxDeviceCreate(ctx context.Context, d *schema.ResourceData, m i
 		}
 	}
 
-	ct, ok := d.GetOk(customFieldsKey)
+	ct, ok := d.GetOk(customFieldsKeyT)
 	if ok {
-		data.CustomFields = ct
+		data.CustomFields = convertCustomFieldsFromSchemaT(ct)
 	}
 
 	var err error
@@ -266,10 +266,10 @@ func resourceNetboxDeviceCreate(ctx context.Context, d *schema.ResourceData, m i
 		}
 	}
 
-	return resourceNetboxDeviceRead(ctx, d, m)
+	return resourceNetboxDeviceTRead(ctx, d, m)
 }
 
-func resourceNetboxDeviceRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceNetboxDeviceTRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	api := m.(*providerState)
 
 	var diags diag.Diagnostics
@@ -353,9 +353,9 @@ func resourceNetboxDeviceRead(ctx context.Context, d *schema.ResourceData, m int
 		d.Set("config_template_id", nil)
 	}
 
-	cf := flattenCustomFields(res.GetPayload().CustomFields)
+	cf := flattenCustomFieldsT(res.GetPayload().CustomFields)
 	if cf != nil {
-		d.Set(customFieldsKey, cf)
+		d.Set(customFieldsKeyT, cf)
 	}
 
 	d.Set("asset_tag", device.AssetTag)
@@ -407,7 +407,7 @@ func resourceNetboxDeviceRead(ctx context.Context, d *schema.ResourceData, m int
 	return diags
 }
 
-func resourceNetboxDeviceUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceNetboxDeviceTUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	api := m.(*providerState)
 
 	id, _ := strconv.ParseInt(d.Id(), 10, 64)
@@ -484,9 +484,9 @@ func resourceNetboxDeviceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		}
 	}
 
-	cf, ok := d.GetOk(customFieldsKey)
+	cf, ok := d.GetOk(customFieldsKeyT)
 	if ok {
-		data.CustomFields = cf
+		data.CustomFields = convertCustomFieldsFromSchemaT(cf)
 	}
 
 	var err error
@@ -559,10 +559,10 @@ func resourceNetboxDeviceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		}
 	}
 
-	return resourceNetboxDeviceRead(ctx, d, m)
+	return resourceNetboxDeviceTRead(ctx, d, m)
 }
 
-func resourceNetboxDeviceDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceNetboxDeviceTDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	api := m.(*providerState)
 
 	var diags diag.Diagnostics
