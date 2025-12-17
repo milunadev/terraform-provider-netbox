@@ -147,6 +147,7 @@ func Provider() *schema.Provider {
 			"netbox_device_module_bay":          resourceNetboxDeviceModuleBay(),
 			"netbox_device_bay":                 resourceNetboxDeviceBay(),
 			"netbox_device_bay_template":        resourceNetboxDeviceBayTemplate(),
+			"netbox_device_bay_attachment":      resourceNetboxDeviceBayAttachment(),
 			"netbox_module":                     resourceNetboxModule(),
 			"netbox_module_type":                resourceNetboxModuleType(),
 			"netbox_power_feed":                 resourceNetboxPowerFeed(),
