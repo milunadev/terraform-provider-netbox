@@ -30,19 +30,22 @@ type customHeaderTransport struct {
 }
 
 // Client does the heavy lifting of establishing a base Open API client to Netbox.
-func (cfg *Config) Client() (*netboxclient.NetBoxAPI, error) {
+// It returns both the generated NetBox API client and the underlying http.Client
+// so that callers can reuse the HTTP configuration (TLS, timeouts, headers) for
+// custom requests when necessary.
+func (cfg *Config) Client() (*netboxclient.NetBoxAPI, *http.Client, error) {
 	log.WithFields(log.Fields{
 		"server_url": cfg.ServerURL,
 	}).Debug("Initializing Netbox client")
 
 	if cfg.APIToken == "" {
-		return nil, fmt.Errorf("missing netbox API key")
+		return nil, nil, fmt.Errorf("missing netbox API key")
 	}
 
 	// parse serverUrl
 	parsedURL, urlParseError := urlx.Parse(cfg.ServerURL)
 	if urlParseError != nil {
-		return nil, fmt.Errorf("error while trying to parse URL: %s", urlParseError)
+		return nil, nil, fmt.Errorf("error while trying to parse URL: %s", urlParseError)
 	}
 
 	desiredRuntimeClientSchemes := []string{parsedURL.Scheme}
@@ -59,7 +62,7 @@ func (cfg *Config) Client() (*netboxclient.NetBoxAPI, error) {
 
 	trans, err := httptransport.TLSTransport(clientOpts)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	trans.(*http.Transport).Proxy = http.ProxyFromEnvironment
@@ -85,7 +88,7 @@ func (cfg *Config) Client() (*netboxclient.NetBoxAPI, error) {
 	transport.SetLogger(log.StandardLogger())
 	netboxClient := netboxclient.New(transport, nil)
 
-	return netboxClient, nil
+	return netboxClient, httpClient, nil
 }
 
 // RoundTrip adds the headers specified in the transport on every request.
